@@ -15,22 +15,36 @@ dependencies:
   intl: ^0.19.0 #Date formatting
   camera: ^0.10.5+9 #Camera access
   image_picker: ^1.0.7 #Image picking
-  provider: ^6.1.2 
+  provider: ^6.1.2 #State management
   table_calendar: ^3.1.1 #Calendar widget
-  lottie: ^3.1.0 
+  lottie: ^3.1.0 #Animations
   google_fonts: ^6.2.1 #Custom fonts
-  uuid: ^4.3.3
-  shared_preferences: ^2.2.2
+  uuid: ^4.3.3 #Unique ID generation
   shimmer: ^3.0.0 #Shimmer effect
   flutter_dotenv: ^6.0.0 #Environment variable
+  flutter_local_notifications: ^17.2.3 #Notifications
+  timezone: ^0.9.4 #Timezone handling
+  flutter_timezone: ^5.0.2 #Timezone handling
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1 #App icon
 
 flutter:
   uses-material-design: true
   assets:
-  #  - assets/images/
+    - assets/AppIcon.png
     - .env
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  web:
+    generate: true
+  windows:
+    generate: true
+  macos:
+    generate: true
+  image_path: assets/AppIcon.png

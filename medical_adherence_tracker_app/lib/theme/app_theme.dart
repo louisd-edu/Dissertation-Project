@@ -14,6 +14,7 @@ class AppTheme {
   static const Color textLight = Color(0xFF9CA3AF);
   static const Color border = Color(0xFFE5E7EB);
   static const Color missedRed = Color(0xFFFF3B30);
+  static const Color skippedOrange = Color(0xFFFF9500);
 
   static ThemeData get theme {
     return ThemeData(
