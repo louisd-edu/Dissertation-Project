@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 28),
                 Center(
                   child: Text(
-                    'MedTrack',
+                    'Palaceholder-Name',
                     style: Theme.of(context)
                         .textTheme
                         .displayLarge
