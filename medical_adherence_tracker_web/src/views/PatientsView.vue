@@ -1,45 +1,45 @@
 <template>
   <AppLayout>
-    <div class="patients-page">
+    <div class="patients-page" data-cy="patients-page">
       <div class="page-header">
         <h2>PATIENT LIST</h2>
-        <RouterLink to="/patients/new" class="btn-primary header-btn">
+        <RouterLink to="/patients/new" class="btn-primary header-btn" data-cy="new-patient-btn">
           <span class="icon" v-html="plusIcon"></span>
           New Patient
         </RouterLink>
       </div>
 
-      <div class="list-card card">
+      <div class="list-card card" data-cy="patient-list">
         <div v-if="loading" class="list-loading">
           <div class="spinner"></div>
         </div>
 
-        <div v-else-if="patients.length === 0" class="list-empty">
+        <div v-else-if="patients.length === 0" class="list-empty" data-cy="empty-state">
           <span class="empty-icon" v-html="usersIcon"></span>
           <p>No patients assigned yet.</p>
         </div>
 
         <template v-else>
-          <div v-for="patient in patients" :key="patient.id" class="patient-row">
+          <div v-for="patient in patients" :key="patient.id" class="patient-row" data-cy="patient-row">
             <div class="patient-avatar">
               <img v-if="patient.profile?.avatar_url" :src="patient.profile.avatar_url" :alt="fullName(patient)" />
               <span v-else>{{ initials(patient) }}</span>
             </div>
 
-            <span class="patient-name">{{ fullName(patient) }}</span>
-            <span class="patient-id">{{ patient.id.slice(0, 8).toUpperCase() }}</span>
+            <span class="patient-name" data-cy="patient-name">{{ fullName(patient) }}</span>
+            <span class="patient-id" data-cy="patient-id-badge">{{ patient.id.slice(0, 8).toUpperCase() }}</span>
 
-            <div class="patient-conditions">
-              <span v-for="c in patient.condition.slice(0, 2)" :key="c" class="condition-tag">{{ c }}</span>
+            <div class="patient-conditions" data-cy="patient-conditions">
+              <span v-for="c in patient.condition.slice(0, 2)" :key="c" class="condition-tag" data-cy="condition-tag">{{ c }}</span>
               <span v-if="patient.condition.length > 2" class="condition-more">+{{ patient.condition.length - 2 }}</span>
             </div>
 
             <div class="patient-actions">
-              <RouterLink :to="`/patients/${patient.id}/adherence`" class="btn-ghost action-btn">
+              <RouterLink :to="`/patients/${patient.id}/adherence`" class="btn-ghost action-btn" data-cy="view-adherence-btn">
                 <span class="icon" v-html="activityIcon"></span>
                 View Adherence
               </RouterLink>
-              <RouterLink :to="`/patients/${patient.id}/plan/new`" class="btn-primary action-btn">
+              <RouterLink :to="`/patients/${patient.id}/plan/new`" class="btn-primary action-btn" data-cy="add-plan-btn">
                 <span class="icon" v-html="plusIcon"></span>
                 Add Plan
               </RouterLink>
@@ -90,6 +90,7 @@ onMounted(async () => {
       ...p,
       profile: profileMap.get(p.id) ?? { name: '', surname: '', avatar_url: undefined },
     })) as PatientWithProfile[]
+
   } finally {
     loading.value = false
   }

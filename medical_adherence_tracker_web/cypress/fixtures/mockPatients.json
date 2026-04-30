@@ -1,0 +1,90 @@
+{
+  "patients": [
+    {
+      "id": "pat-uuid-001",
+      "doctor_id": "doc-uuid-001",
+      "condition": ["Hypertension", "Type 2 Diabetes"]
+    },
+    {
+      "id": "pat-uuid-002",
+      "doctor_id": "doc-uuid-001",
+      "condition": ["Asthma"]
+    },
+    {
+      "id": "pat-uuid-003",
+      "doctor_id": "doc-uuid-001",
+      "condition": ["COPD", "Heart Disease", "Anxiety"]
+    }
+  ],
+  "patientProfiles": [
+    {
+      "id": "pat-uuid-001",
+      "name": "Patient",
+      "surname": "One",
+      "role": "patient",
+      "avatar_url": null
+    },
+    {
+      "id": "pat-uuid-002",
+      "name": "Patient",
+      "surname": "Two",
+      "role": "patient",
+      "avatar_url": null
+    },
+    {
+      "id": "pat-uuid-003",
+      "name": "Patient",
+      "surname": "Three",
+      "role": "patient",
+      "avatar_url": null
+    }
+  ],
+  "doctorProfile": {
+    "id": "doc-uuid-001",
+    "name": "Test",
+    "surname": "Doctor",
+    "role": "doctor",
+    "avatar_url": null
+  },
+  "plans": [
+    {
+      "id": "plan-uuid-001",
+      "plan_name": "Morning Metformin",
+      "name": "Metformin",
+      "dosage": 500,
+      "units": "mg",
+      "frequency": ["daily"],
+      "time": "08:00",
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31",
+      "patient_id": "pat-uuid-001",
+      "doctor_id": "doc-uuid-001"
+    },
+    {
+      "id": "plan-uuid-002",
+      "plan_name": "Salbutamol Inhaler",
+      "name": "Salbutamol",
+      "dosage": 100,
+      "units": "mcg",
+      "frequency": ["daily"],
+      "time": "08:00",
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31",
+      "patient_id": "pat-uuid-002",
+      "doctor_id": "doc-uuid-001"
+    },
+    {
+      "id": "plan-uuid-003",
+      "plan_name": "Tiotropium Morning",
+      "name": "Tiotropium",
+      "dosage": 18,
+      "units": "mcg",
+      "frequency": ["daily"],
+      "time": "08:00",
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31",
+      "patient_id": "pat-uuid-003",
+      "doctor_id": "doc-uuid-001"
+    }
+  ]
+}

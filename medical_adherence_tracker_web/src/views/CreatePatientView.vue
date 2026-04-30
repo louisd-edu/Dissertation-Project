@@ -10,26 +10,26 @@
 
       <div class="form-container">
         <div class="card form-card">
-          <form @submit.prevent="createPatient" class="form">
+          <form @submit.prevent="createPatient" class="form" data-cy="create-patient-form">
 
             <div class="field">
               <label>First Name</label>
-              <input v-model="form.name" required placeholder="John" />
+              <input v-model="form.name" required placeholder="John" data-cy="name-input" />
             </div>
 
             <div class="field">
               <label>Last Name</label>
-              <input v-model="form.surname" required placeholder="Doe" />
+              <input v-model="form.surname" required placeholder="Doe" data-cy="surname-input" />
             </div>
 
             <div class="field">
               <label>Email</label>
-              <input v-model="form.email" type="email" required placeholder="patient@mail.com" />
+              <input v-model="form.email" type="email" required placeholder="patient@mail.com" data-cy="email-input" />
             </div>
 
             <div class="field">
               <label>Password</label>
-              <input v-model="form.password" type="password" required placeholder="Temporary password" minlength="6" />
+              <input v-model="form.password" type="password" required placeholder="Temporary password" minlength="6" data-cy="password-input" />
             </div>
 
             <div class="field">
@@ -37,13 +37,13 @@
                 Conditions
                 <span class="field-hint">(use commas to separate conditions)</span>
               </label>
-              <input v-model="form.conditionsInput" placeholder="e.g. Diabetes, Hypertension" />
+              <input v-model="form.conditionsInput" placeholder="e.g. Diabetes, Hypertension" data-cy="conditions-input" />
             </div>
 
-            <div v-if="errorMsg" class="error-msg">{{ errorMsg }}</div>
+            <div v-if="errorMsg" class="error-msg" data-cy="error-message">{{ errorMsg }}</div>
 
             <div class="form-actions">
-              <button type="submit" class="btn-primary" :disabled="saving">
+              <button type="submit" class="btn-primary" :disabled="saving" data-cy="submit-btn">
                 <span v-if="saving" class="btn-spinner"></span>
                 {{ saving ? 'Creating…' : 'Create Patient' }}
               </button>

@@ -1,6 +1,6 @@
 <template>
   <AppLayout>
-    <div class="adherence-page">
+    <div class="adherence-page" data-cy="adherence-page">
       <!-- Header -->
       <div class="adh-header">
         <div class="adh-title">
@@ -36,26 +36,26 @@
           <div class="card stat-card">
             <span class="stat-section-title">Monthly Adherence</span>
             <DonutChart :percentage="monthlyAdherencePct" :size="120" color="#34C759">
-              <span class="donut-pct-sm">{{ monthlyAdherencePct }}%</span>
+              <span class="donut-pct-sm" data-cy="monthly-adherence-pct">{{ monthlyAdherencePct }}%</span>
             </DonutChart>
 
             <div class="stat-section-title" style="margin-top:16px">Monthly Stats</div>
             <div class="stat-rows">
               <div class="stat-row">
                 <span class="stat-label-text">Taken</span>
-                <span class="badge badge--taken">{{ monthStats.taken }}</span>
+                <span class="badge badge--taken" data-cy="stat-badge-taken">{{ monthStats.taken }}</span>
               </div>
               <div class="stat-row">
                 <span class="stat-label-text">Late</span>
-                <span class="badge badge--late">{{ monthStats.late }}</span>
+                <span class="badge badge--late" data-cy="stat-badge-late">{{ monthStats.late }}</span>
               </div>
               <div class="stat-row">
                 <span class="stat-label-text">Skipped</span>
-                <span class="badge badge--skipped">{{ monthStats.skipped }}</span>
+                <span class="badge badge--skipped" data-cy="stat-badge-skipped">{{ monthStats.skipped }}</span>
               </div>
               <div class="stat-row">
                 <span class="stat-label-text">Missed</span>
-                <span class="badge badge--missed">{{ monthStats.missed }}</span>
+                <span class="badge badge--missed" data-cy="stat-badge-missed">{{ monthStats.missed }}</span>
               </div>
             </div>
           </div>
@@ -66,10 +66,10 @@
           <div class="cal-toolbar">
             <span class="cal-range">{{ calMonthLabel }}</span>
             <div class="cal-nav">
-              <button class="cal-nav-btn" @click="shiftMonth(-1)">
+              <button class="cal-nav-btn" @click="shiftMonth(-1)" data-cy="month-nav-prev">
                 <span class="icon" v-html="chevronLeftIcon"></span>
               </button>
-              <button class="cal-nav-btn" @click="shiftMonth(1)" :disabled="isCurrentMonth">
+              <button class="cal-nav-btn" @click="shiftMonth(1)" :disabled="isCurrentMonth" data-cy="month-nav-next">
                 <span class="icon" v-html="chevronRightIcon"></span>
               </button>
             </div>
@@ -79,12 +79,14 @@
             <div class="spinner"></div>
           </div>
 
-          <div v-else class="cal-body">
+          <div v-else class="cal-body" data-cy="calendar-body">
             <div
               v-for="row in calRows"
               :key="row.date"
               class="cal-row"
               :class="{ 'cal-row--today': row.isToday }"
+              data-cy="calendar-row"
+              :data-date="row.date"
             >
               <span class="cal-date-label" :class="{ 'today-label': row.isToday }">{{ row.label }}</span>
               <div class="cal-doses">
@@ -93,6 +95,8 @@
                   :key="dose.id"
                   class="dose-bar"
                   :class="[`dose-bar--${dose.status}`, { 'dose-bar--has-media': dose.media_url }]"
+                  data-cy="dose-bar"
+                  :data-status="dose.status"
                   @mouseenter="onDoseHover($event, dose)"
                   @mouseleave="tooltip.visible = false"
                   @click="dose.media_url ? openMedia(dose) : undefined"

@@ -3,13 +3,13 @@
     <div class="login-card card">
       <div class="login-header">
         <div class="login-logo">
-          <img src="@/assets/AppIcon.png" alt="MedAdhere" class="logo-img" />
+          <img src="@/assets/AppIcon.png" alt="VeriDose" class="logo-img" />
         </div>
-        <h1>Placeholder-Name</h1>
+        <h1>VeriDose</h1>
         <p>Doctor Portal</p>
       </div>
 
-      <form @submit.prevent="handleLogin" class="login-form">
+      <form @submit.prevent="handleLogin" class="login-form" data-cy="login-form">
         <div class="field">
           <label for="email">Email</label>
           <input
@@ -19,6 +19,7 @@
             placeholder="example@mail.com"
             autocomplete="email"
             required
+            data-cy="email-input"
           />
         </div>
 
@@ -31,12 +32,13 @@
             placeholder="••••••••"
             autocomplete="current-password"
             required
+            data-cy="password-input"
           />
         </div>
 
-        <div v-if="errorMsg" class="error-msg">{{ errorMsg }}</div>
+        <div v-if="errorMsg" class="error-msg" data-cy="error-message">{{ errorMsg }}</div>
 
-        <button type="submit" class="btn-primary login-btn" :disabled="loading">
+        <button type="submit" class="btn-primary login-btn" :disabled="loading" data-cy="submit-btn">
           <span v-if="loading" class="btn-spinner"></span>
           <span>{{ loading ? 'Signing in…' : 'Sign In' }}</span>
         </button>

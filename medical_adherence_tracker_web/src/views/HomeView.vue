@@ -1,6 +1,6 @@
 <template>
   <AppLayout>
-    <div class="home">
+    <div class="home" data-cy="dashboard">
       <div class="page-header">
         <h2>Home</h2>
       </div>
@@ -23,10 +23,10 @@
         <!-- Total Patients -->
         <div class="card patients-card">
           <span class="stat-label">Total Patients</span>
-          <span v-if="loadingStats" class="stat-loading">
+          <span v-if="loadingStats" class="stat-loading" data-cy="stat-loading">
             <span class="spinner"></span>
           </span>
-          <span v-else class="stat-number">{{ patientCount }}</span>
+          <span v-else class="stat-number" data-cy="patient-count">{{ patientCount }}</span>
         </div>
 
         <!-- Monthly Adherence -->
@@ -36,7 +36,7 @@
             :size="130"
             color="#34C759"
           >
-            <span class="donut-pct">{{ adherencePct }}%</span>
+            <span class="donut-pct" data-cy="adherence-pct">{{ adherencePct }}%</span>
             <span class="donut-sub">Adherence</span>
           </DonutChart>
           <div class="adherence-info">
@@ -45,22 +45,22 @@
               <div class="breakdown-row">
                 <span class="dot" style="background:var(--success)"></span>
                 <span>Taken</span>
-                <span class="breakdown-val">{{ stats.taken }}</span>
+                <span class="breakdown-val" data-cy="stat-taken">{{ stats.taken }}</span>
               </div>
               <div class="breakdown-row">
                 <span class="dot" style="background:var(--late)"></span>
                 <span>Late</span>
-                <span class="breakdown-val">{{ stats.late }}</span>
+                <span class="breakdown-val" data-cy="stat-late">{{ stats.late }}</span>
               </div>
               <div class="breakdown-row">
                 <span class="dot" style="background:var(--skipped)"></span>
                 <span>Skipped</span>
-                <span class="breakdown-val">{{ stats.skipped }}</span>
+                <span class="breakdown-val" data-cy="stat-skipped">{{ stats.skipped }}</span>
               </div>
               <div class="breakdown-row">
                 <span class="dot" style="background:var(--missed)"></span>
                 <span>Missed</span>
-                <span class="breakdown-val">{{ stats.missed }}</span>
+                <span class="breakdown-val" data-cy="stat-missed">{{ stats.missed }}</span>
               </div>
             </div>
           </div>
