@@ -218,7 +218,7 @@ const displayDoses = computed(() => {
     const cur = new Date(genStart)
     while (cur <= genEnd) {
       const dateStr = localDateStr(cur)
-      if (isDaily || freqLower.includes(DAY_NAMES[cur.getDay()])) {
+      if (isDaily || freqLower.includes(DAY_NAMES[cur.getDay()] ?? '')) {
         const key = `${plan.id}|${dateStr}`
         if (!realKeys.has(key) && dateStr <= todayStr) {
           virtual.push({
@@ -467,8 +467,7 @@ onMounted(async () => {
 .dose-bar--missed   { background: var(--missed); }
 .dose-bar--scheduled { background: #D1D5DB; }
 .dose-bar--has-media {
-  outline: 2px dashed var(--primary);
-  outline-offset: -2px;
+  box-shadow: inset 0 0 0 3px var(--primary);
   cursor: pointer;
 }
 .no-doses { font-size: 12px; color: var(--border); }
@@ -482,7 +481,12 @@ onMounted(async () => {
   font-size: 11px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.04em;
 }
 .legend-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
-.video-dot { background: transparent; border: 2px dashed var(--primary); }
+.video-dot {
+  width: 18px;
+  height: 4px;
+  background: var(--primary);
+  border-radius: 999px;
+}
 
 .dose-tooltip {
   position: absolute; z-index: 9999;
