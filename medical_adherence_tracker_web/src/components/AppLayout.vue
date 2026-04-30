@@ -2,23 +2,23 @@
   <div class="layout">
     <aside class="sidebar">
       <div class="sidebar-brand">
-        <img src="@/assets/AppIcon.png" alt="MedAdhere" class="brand-logo" />
+        <img src="@/assets/AppIcon.png" alt="VeriDose" class="brand-logo" />
       </div>
 
       <nav class="sidebar-nav">
-        <RouterLink to="/home"     class="nav-item" :class="{ active: isActive('/home') }"     title="Home">
+        <RouterLink to="/home"     class="nav-item" :class="{ active: isActive('/home') }"     title="Home"     data-cy="nav-home">
           <span class="icon" v-html="homeIcon"></span>
         </RouterLink>
-        <RouterLink to="/patients" class="nav-item" :class="{ active: isActive('/patients') }" title="Patients">
+        <RouterLink to="/patients" class="nav-item" :class="{ active: isActive('/patients') }" title="Patients" data-cy="nav-patients">
           <span class="icon" v-html="listIcon"></span>
         </RouterLink>
-        <RouterLink to="/settings" class="nav-item" :class="{ active: isActive('/settings') }" title="Settings">
+        <RouterLink to="/settings" class="nav-item" :class="{ active: isActive('/settings') }" title="Settings" data-cy="nav-settings">
           <span class="icon" v-html="settingsIcon"></span>
         </RouterLink>
       </nav>
 
       <div class="sidebar-footer">
-        <button class="nav-item logout-btn" @click="handleLogout" title="Logout">
+        <button class="nav-item logout-btn" @click="handleLogout" title="Logout" data-cy="nav-logout">
           <span class="icon" v-html="logOutIcon"></span>
         </button>
       </div>

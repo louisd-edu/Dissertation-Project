@@ -50,18 +50,18 @@
 
         <!-- form -->
         <div class="form-card card">
-          <form @submit.prevent="handleSubmit" class="plan-form">
+          <form @submit.prevent="handleSubmit" class="plan-form" data-cy="create-plan-form">
 
             <fieldset class="form-section">
               <legend>Plan Identity</legend>
               <div class="fields-row">
                 <div class="field">
                   <label>Plan Name</label>
-                  <input v-model="form.plan_name" type="text" placeholder="e.g. Morning Routine" required />
+                  <input v-model="form.plan_name" type="text" placeholder="e.g. Morning Routine" required data-cy="plan-name-input" />
                 </div>
                 <div class="field">
                   <label>Medication Name</label>
-                  <input v-model="form.name" type="text" placeholder="e.g. Ibuprofen" required />
+                  <input v-model="form.name" type="text" placeholder="e.g. Ibuprofen" required data-cy="medication-name-input" />
                 </div>
               </div>
             </fieldset>
@@ -71,11 +71,11 @@
               <div class="fields-row">
                 <div class="field field--sm">
                   <label>Amount</label>
-                  <input v-model.number="form.dosage" type="number" min="0.1" step="0.1" placeholder="200" required />
+                  <input v-model.number="form.dosage" type="number" min="0.1" step="0.1" placeholder="200" required data-cy="dosage-input" />
                 </div>
                 <div class="field field--sm">
                   <label>Units</label>
-                  <select v-model="form.units" required>
+                  <select v-model="form.units" required data-cy="units-select">
                     <option value="">Select…</option>
                     <option value="mg">mg</option>
                     <option value="g">g</option>
@@ -88,7 +88,7 @@
                 </div>
                 <div class="field field--sm">
                   <label>Time of Day</label>
-                  <input v-model="form.time" type="time" required />
+                  <input v-model="form.time" type="time" required data-cy="time-input" />
                 </div>
               </div>
             </fieldset>
@@ -101,12 +101,14 @@
                   :key="day.key"
                   class="day-chip"
                   :class="{ selected: isDaySelected(day.key) }"
+                  data-cy="day-chip"
+                  :data-day="day.key"
                 >
                   <input type="checkbox" :value="day.key" style="display:none" @change="toggleDay(day.key)" />
                   {{ day.label }}
                 </label>
               </div>
-              <p v-if="form.frequency.length === 0" class="freq-hint">Select at least one day.</p>
+              <p v-if="form.frequency.length === 0" class="freq-hint" data-cy="freq-hint">Select at least one day.</p>
             </fieldset>
 
             <fieldset class="form-section">
@@ -114,26 +116,26 @@
               <div class="fields-row">
                 <div class="field">
                   <label>Start Date</label>
-                  <input v-model="form.start_date" type="date" required />
+                  <input v-model="form.start_date" type="date" required data-cy="start-date-input" />
                 </div>
                 <div class="field">
                   <label>End Date</label>
-                  <input v-model="form.end_date" type="date" required :min="form.start_date" />
+                  <input v-model="form.end_date" type="date" required :min="form.start_date" data-cy="end-date-input" />
                 </div>
               </div>
-              <p v-if="estimatedDoses > 0" class="dose-estimate">
+              <p v-if="estimatedDoses > 0" class="dose-estimate" data-cy="dose-estimate">
                 Approximately <strong>{{ estimatedDoses }}</strong> dose{{ estimatedDoses !== 1 ? 's' : '' }} will be scheduled.
               </p>
             </fieldset>
 
-            <div v-if="errorMsg"   class="error-msg">{{ errorMsg }}</div>
-            <div v-if="successMsg" class="success-msg">
+            <div v-if="errorMsg"   class="error-msg"   data-cy="error-message">{{ errorMsg }}</div>
+            <div v-if="successMsg" class="success-msg" data-cy="success-message">
               <span class="icon" v-html="checkIcon"></span>
               {{ successMsg }}
             </div>
 
             <div class="form-actions">
-              <button type="submit" class="btn-primary" :disabled="submitting || form.frequency.length === 0">
+              <button type="submit" class="btn-primary" :disabled="submitting || form.frequency.length === 0" data-cy="submit-plan-btn">
                 <span v-if="submitting" class="btn-spinner"></span>
                 {{ submitting ? 'Creating…' : 'Create Plan' }}
               </button>
@@ -162,14 +164,14 @@ const router    = useRouter()
 const patientId = route.params.id as string
 
 const ALL_DAYS = [
-  { key: 'daily',     label: 'Everyday' },
-  { key: 'monday',    label: 'Mon' },
-  { key: 'tuesday',   label: 'Tue' },
-  { key: 'wednesday', label: 'Wed' },
-  { key: 'thursday',  label: 'Thu' },
-  { key: 'friday',    label: 'Fri' },
-  { key: 'saturday',  label: 'Sat' },
-  { key: 'sunday',    label: 'Sun' },
+  { key: 'daily', label: 'Everyday' },
+  { key: 'mo',    label: 'Mon' },
+  { key: 'tu',    label: 'Tue' },
+  { key: 'we',    label: 'Wed' },
+  { key: 'th',    label: 'Thu' },
+  { key: 'fr',    label: 'Fri' },
+  { key: 'sa',    label: 'Sat' },
+  { key: 'su',    label: 'Sun' },
 ]
 
 const patientProfile = ref<Profile | null>(null)
@@ -203,7 +205,7 @@ function toggleDay(key: string) {
   }
   const hadDaily = form.value.frequency.includes('daily')
   if (hadDaily) {
-    form.value.frequency = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'].filter(d => d !== key)
+    form.value.frequency = ['mo','tu','we','th','fr','sa','su'].filter(d => d !== key)
     return
   }
   const idx = form.value.frequency.indexOf(key)
@@ -255,24 +257,27 @@ function supaErr(e: { message?: string; code?: string } | null | undefined): str
 }
 
 async function handleSubmit() {
-  if (!currentUser.value) return
+  if (!currentUser.value) { errorMsg.value = 'Not logged in. Please refresh and try again.'; return }
   if (form.value.frequency.length === 0) { errorMsg.value = 'Please select at least one day.'; return }
   submitting.value = true; errorMsg.value = ''; successMsg.value = ''
   try {
     const planId = crypto.randomUUID()
-    const signal = AbortSignal.timeout(15_000)
     const { error: planErr } = await supabase
       .from('medication_plan')
       .insert({
         id: planId,
-        plan_name: form.value.plan_name, name: form.value.name,
-        dosage: Math.round(form.value.dosage), units: form.value.units,
-        frequency: form.value.frequency, time: form.value.time,
-        start_date: form.value.start_date, end_date: form.value.end_date,
-        patient_id: patientId, doctor_id: currentUser.value.id,
+        plan_name: form.value.plan_name,
+        name: form.value.name,
+        dosage: Math.round(form.value.dosage),
+        units: form.value.units,
+        frequency: form.value.frequency.includes('daily') ? ['mo','tu','we','th','fr','sa','su'] : form.value.frequency,
+        time: form.value.time,
+        start_date: form.value.start_date,
+        end_date: form.value.end_date,
+        patient_id: patientId,
+        doctor_id: currentUser.value.id,
       })
-      .abortSignal(signal)
-    if (planErr) throw new Error(`Plan insert failed: ${supaErr(planErr)}`)
+    if (planErr) throw new Error(`${planErr.message} (code: ${planErr.code})`)
     successMsg.value = 'Plan created successfully.'
     const newPlan: MedicationPlan = {
       id: planId,
@@ -287,7 +292,9 @@ async function handleSubmit() {
   } catch (e: unknown) {
     errorMsg.value = e instanceof Error ? e.message : 'Something went wrong.'
     console.error('[CreatePlan]', e)
-  } finally { submitting.value = false }
+  } finally {
+    submitting.value = false
+  }
 }
 
 onMounted(async () => {
