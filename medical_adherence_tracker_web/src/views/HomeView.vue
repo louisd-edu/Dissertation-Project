@@ -33,14 +33,14 @@
         <div class="card adherence-card">
           <DonutChart
             :percentage="adherencePct"
-            :size="130"
+            :size="100"
             color="#34C759"
           >
             <span class="donut-pct" data-cy="adherence-pct">{{ adherencePct }}%</span>
-            <span class="donut-sub">Adherence</span>
           </DonutChart>
+
           <div class="adherence-info">
-            <span class="stat-label">Monthly Adherence</span>
+            <h3>Monthly Adherence</h3>
             <div class="adherence-breakdown">
               <div class="breakdown-row">
                 <span class="dot" style="background:var(--success)"></span>
@@ -95,6 +95,23 @@ const patientCount  = ref(0)
 const loadingStats  = ref(true)
 const stats         = ref({ taken: 0, late: 0, skipped: 0, missed: 0 })
 const adherencePct  = ref(0)
+const allDoses      = ref<Array<{ id: string; status: string; scheduled_for: string }>>([])
+
+function formatDoseDate(dateStr: string): string {
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })
+}
+
+function formatStatus(status: string): string {
+  const labels: Record<string, string> = {
+    taken: 'Taken',
+    late: 'Late',
+    skipped: 'Skipped',
+    missed: 'Missed',
+    scheduled: 'Scheduled',
+  }
+  return labels[status] ?? status
+}
 
 onMounted(async () => {
   if (!currentUser.value) return
@@ -117,49 +134,28 @@ onMounted(async () => {
 
     if (plans && plans.length > 0) {
       const planIds = plans.map(p => p.id)
-      const planToPatient = new Map(plans.map(p => [p.id, p.patient_id as string]))
 
       const { data: doses } = await supabase
         .from('dose')
-        .select('status, plan_id')
+        .select('id, status, scheduled_for')
         .in('plan_id', planIds)
-        .neq('status', 'scheduled')
         .gte('scheduled_for', monthStart)
         .lte('scheduled_for', monthEnd)
 
       if (doses && doses.length > 0) {
-        const perPatient = new Map<string, { taken: number; late: number; skipped: number; missed: number }>()
+        allDoses.value = doses
+        stats.value = { taken: 0, late: 0, skipped: 0, missed: 0 }
 
         for (const d of doses) {
-          const pid = planToPatient.get(d.plan_id) ?? 'unknown'
-          if (!perPatient.has(pid)) perPatient.set(pid, { taken: 0, late: 0, skipped: 0, missed: 0 })
-          const s = perPatient.get(pid)!
-          if      (d.status === 'taken')   s.taken++
-          else if (d.status === 'late')    s.late++
-          else if (d.status === 'skipped') s.skipped++
-          else if (d.status === 'missed')  s.missed++
+          if      (d.status === 'taken')   stats.value.taken++
+          else if (d.status === 'late')    stats.value.late++
+          else if (d.status === 'skipped') stats.value.skipped++
+          else if (d.status === 'missed')  stats.value.missed++
         }
 
-        
-        for (const [, s] of perPatient) {
-          stats.value.taken   += s.taken
-          stats.value.late    += s.late
-          stats.value.skipped += s.skipped
-          stats.value.missed  += s.missed
-        }
-
-        // Average adherence % across patients (not implemented yet)
-        let totalPct = 0
-        let activeCount = 0
-        for (const [, s] of perPatient) {
-          const adherent = s.taken + s.late
-          const total    = adherent + s.skipped + s.missed
-          if (total > 0) {
-            totalPct += (adherent / total) * 100
-            activeCount++
-          }
-        }
-        adherencePct.value = activeCount > 0 ? Math.round(totalPct / activeCount) : 0
+        const adherentCount = stats.value.taken + stats.value.late
+        const totalCount = adherentCount + stats.value.skipped + stats.value.missed
+        adherencePct.value = totalCount > 0 ? Math.round((adherentCount / totalCount) * 100) : 0
       }
     }
   } finally {
@@ -262,6 +258,7 @@ onMounted(async () => {
 .donut-pct { font-size: 22px; font-weight: 700; color: var(--text-primary); }
 .donut-sub { font-size: 11px; color: var(--text-secondary); font-weight: 500; }
 .adherence-info { display: flex; flex-direction: column; gap: 6px; }
+.adherence-info h3 { margin: 0; font-size: 14px; font-weight: 600; color: var(--text-secondary); }
 .adherence-breakdown { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
 .breakdown-row {
   display: flex;
