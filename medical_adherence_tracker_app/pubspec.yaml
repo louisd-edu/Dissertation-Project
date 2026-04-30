@@ -1,4 +1,4 @@
-name: medtrack
+name: veridose
 description: A medicine tracking app with dose logging and streak tracking.
 publish_to: 'none'
 version: 1.0.0+1
@@ -39,7 +39,7 @@ flutter:
     - .env
 
 flutter_launcher_icons:
-  android: true
+  android: "launcher_icon"
   ios: true
   web:
     generate: true
@@ -48,6 +48,7 @@ flutter_launcher_icons:
   macos:
     generate: true
   image_path: assets/AppIcon.png
-  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_background: "#3B6FE8"
   adaptive_icon_foreground: assets/AppIcon.png
-  adaptive_icon_foreground_inset: 16
+  background_color: "#3B6FE8"
+  remove_alpha_ios: true

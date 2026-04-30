@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -99,7 +100,7 @@ class _Header extends StatelessWidget {
           ),
           CircleAvatar(
             radius: 22,
-            backgroundColor: AppTheme.primary.withOpacity(0.15),
+            backgroundColor: AppTheme.primary.withValues(alpha: 0.15),
             backgroundImage: profile?.avatarUrl != null
                 ? NetworkImage(profile!.avatarUrl!)
                 : null,
@@ -228,17 +229,43 @@ class _ScheduleList extends StatelessWidget {
   }
 }
 
-class _DoseCard extends StatelessWidget {
+class _DoseCard extends StatefulWidget {
   final ScheduledDose scheduledDose;
   const _DoseCard({required this.scheduledDose});
 
   @override
+  State<_DoseCard> createState() => _DoseCardState();
+}
+
+class _DoseCardState extends State<_DoseCard> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final scheduledDose = widget.scheduledDose;
     final plan = scheduledDose.plan;
     final status = scheduledDose.status;
     final isTaken = status == DoseStatus.taken;
-    final isMissed = status == DoseStatus.missed;
     final isSkipped = status == DoseStatus.skipped;
+    final now = DateTime.now();
+    final threshold = scheduledDose.scheduledTime.add(const Duration(hours: 2));
+    final isMissed = status == DoseStatus.missed ||
+        (status == DoseStatus.pending && now.isAfter(threshold));
+    debugPrint('[DoseCard] status=$status scheduledTime=${scheduledDose.scheduledTime} threshold=$threshold now=$now isMissed=$isMissed');
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -260,15 +287,15 @@ class _DoseCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isMissed
-                    ? AppTheme.missedRed.withOpacity(0.3)
+                    ? AppTheme.missedRed.withValues(alpha: 0.3)
                     : isSkipped
-                        ? AppTheme.warning.withOpacity(0.35)
+                        ? AppTheme.warning.withValues(alpha: 0.35)
                         : AppTheme.border,
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -306,7 +333,7 @@ class _DoseCard extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: AppTheme.success.withOpacity(0.12),
+                      color: AppTheme.success.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(Icons.check_rounded,
@@ -317,7 +344,7 @@ class _DoseCard extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: AppTheme.missedRed.withOpacity(0.1),
+                      color: AppTheme.missedRed.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
@@ -334,7 +361,7 @@ class _DoseCard extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: AppTheme.warning.withOpacity(0.15),
+                      color: AppTheme.warning.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
@@ -380,7 +407,7 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.medication_outlined, size: 64, color: AppTheme.textLight),
+          const Icon(Icons.medication_outlined, size: 64, color: AppTheme.textLight),
           const SizedBox(height: 16),
           Text(
             'No medications scheduled',

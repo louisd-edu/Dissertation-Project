@@ -74,14 +74,12 @@ List<String> _parseFrequency(dynamic value) {
     final normalized = token.trim().toLowerCase();
     if (normalized.isEmpty) continue;
 
-    // Use one weekday format only.
-    final canonical = normalized == 'sun' ? 'su' : normalized;
-    if (!const {'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su'}.contains(canonical)) {
+    if (!const {'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su'}.contains(normalized)) {
       continue;
     }
 
-    if (seen.add(canonical)) {
-      parsed.add(canonical);
+    if (seen.add(normalized)) {
+      parsed.add(normalized);
     }
   }
 
