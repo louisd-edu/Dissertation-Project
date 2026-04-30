@@ -25,11 +25,12 @@ class AppState extends ChangeNotifier {
   int _weeksCompleted = 0;
   bool _isLoading = false;
   DateTime _selectedDate = DateTime.now();
+  Timer? _scheduleRefreshTimer;
 
   static const int _reminderLookaheadDays = 7;
   static const Duration _reminderBeforeOffset = Duration(hours: -1);
   static const Duration _reminderOnTimeOffset = Duration.zero;
-  static const Duration _reminderAfterOffset = Duration(hours: 1);
+  static const Duration _reminderAfterOffset = Duration(hours: 2);
 
   Profile? get profile => _profile;
   Patient? get patient => _patient;
@@ -44,6 +45,8 @@ class AppState extends ChangeNotifier {
   DateTime get selectedDate => _selectedDate;
 
   void reset() {
+    _scheduleRefreshTimer?.cancel();
+    _scheduleRefreshTimer = null;
     _profile = null;
     _patient = null;
     _plans = [];
@@ -62,6 +65,13 @@ class AppState extends ChangeNotifier {
     _isLoading = false;
     unawaited(_notificationService.clearMedicationReminders());
     notifyListeners();
+  }
+
+  void _startScheduleRefreshTimer() {
+    _scheduleRefreshTimer?.cancel();
+    _scheduleRefreshTimer = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (_patient != null) unawaited(loadTodaySchedule());
+    });
   }
 
   void setSelectedDate(DateTime date) {
@@ -110,6 +120,7 @@ class AppState extends ChangeNotifier {
       unawaited(loadTodaySchedule());
       unawaited(loadStats());
       unawaited(_syncMedicationReminders());
+      _startScheduleRefreshTimer();
 
       return _profile != null && _patient != null;
     } catch (_) {

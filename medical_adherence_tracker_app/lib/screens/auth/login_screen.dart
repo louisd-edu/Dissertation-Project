@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 28),
                 Center(
                   child: Text(
-                    'Palaceholder-Name',
+                    'VeriDose',
                     style: Theme.of(context)
                         .textTheme
                         .displayLarge
@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       margin: const EdgeInsets.only(bottom: 16),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppTheme.missedRed.withOpacity(0.1),
+                        color: AppTheme.missedRed.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(

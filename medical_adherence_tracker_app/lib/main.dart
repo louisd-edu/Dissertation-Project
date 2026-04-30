@@ -139,10 +139,9 @@ class _AuthLoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
+    return Scaffold(
+      backgroundColor: AppTheme.surface,
+      body: const Center(child: CircularProgressIndicator()),
     );
   }
 }

@@ -1,6 +1,6 @@
 {
-    "name": "medical_adherence_tracker_app",
-    "short_name": "medical_adherence_tracker_app",
+    "name": "VeriDose",
+    "short_name": "VeriDose",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
